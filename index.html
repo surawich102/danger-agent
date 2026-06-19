@@ -301,6 +301,86 @@
     text-align: center; padding: 4px 0 8px;
   }
 
+  /* ===== MOBILE RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    body { overflow: auto; justify-content: flex-start; padding: 0; }
+
+    .scene {
+      width: 100vw; max-width: 100vw;
+      border-radius: 0; border-left: none; border-right: none;
+      min-height: 100dvh;
+      display: flex; flex-direction: column;
+    }
+
+    .topbar { padding: 10px 16px; }
+    .topbar-title { font-size: 1rem; }
+    .dot { width: 9px; height: 9px; }
+
+    .content {
+      flex: 1; overflow-y: auto;
+      padding: 14px 14px 8px;
+      justify-content: flex-start;
+      /* leave room for sticky nav */
+      padding-bottom: 80px;
+    }
+
+    /* Intro slide */
+    .char-wrap { width: 120px; height: 130px; }
+    .intro-title { font-size: 1.8rem; }
+    .intro-sub { font-size: 0.95rem; }
+    .badge-row { gap: 8px; margin-top: 16px; }
+    .badge { padding: 8px 12px; font-size: 0.85rem; }
+    .badge-icon { font-size: 1.5rem; }
+
+    /* Substance layout: stack vertically on mobile */
+    .substance-layout {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .char-col {
+      flex-direction: row; justify-content: center;
+      gap: 14px; align-items: center;
+    }
+    .char-col svg { width: 80px; height: 90px; }
+    .char-col > div { font-size: 0.8rem; padding: 6px 10px; }
+
+    .substance-title { font-size: 1.3rem; flex-wrap: wrap; }
+    .info-card { padding: 12px 14px; margin-top: 8px; }
+    .info-card p { font-size: 0.88rem; }
+    .danger-box { padding: 10px 12px; margin-top: 8px; }
+    .danger-box p { font-size: 0.85rem; }
+    .test-steps { padding: 10px 12px; margin-top: 8px; }
+    .step-item { font-size: 0.83rem; }
+    .result-row { gap: 8px; margin-top: 8px; }
+    .result-card { padding: 10px; }
+    .result-card .icon { font-size: 1.8rem; }
+    .result-card .label { font-size: 0.82rem; }
+    .result-card .desc { font-size: 0.75rem; }
+    .tab-btn { padding: 5px 12px; font-size: 0.82rem; }
+
+    /* Summary slide */
+    .summary-title { font-size: 1.5rem; }
+    .tip-list { margin-top: 12px; }
+    .tip-item { padding: 9px 12px; font-size: 0.88rem; margin-bottom: 7px; }
+    .tip-item .tip-icon { font-size: 1.4rem; min-width: 32px; }
+
+    /* Nav bar: sticky to bottom */
+    .nav-bar {
+      position: sticky; bottom: 0; z-index: 50;
+      padding: 10px 16px;
+      background: rgba(15,52,96,0.97);
+      border-top: 2px solid rgba(233,69,96,0.4);
+    }
+    .btn { padding: 10px 20px; font-size: 0.9rem; }
+
+    /* QR button: smaller on mobile */
+    .qr-btn { width: 46px; height: 46px; bottom: 70px; right: 14px; }
+
+    /* modal responsive */
+    .modal-box { padding: 22px 20px; }
+    #qrCanvas { width: 180px !important; height: 180px !important; }
+  }
+
   /* ===== QR BUTTON ===== */
   .qr-btn {
     position: fixed; bottom: 24px; right: 24px; z-index: 100;
