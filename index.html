@@ -303,82 +303,118 @@
 
   /* ===== MOBILE RESPONSIVE ===== */
   @media (max-width: 600px) {
-    body { overflow: auto; justify-content: flex-start; padding: 0; }
+    html, body {
+      height: 100%; height: 100dvh;
+      overflow: hidden;
+      margin: 0; padding: 0;
+    }
 
+    body {
+      justify-content: flex-start;
+      align-items: stretch;
+    }
+
+    /* Scene = full screen, fixed layout */
     .scene {
       width: 100vw; max-width: 100vw;
-      border-radius: 0; border-left: none; border-right: none;
-      min-height: 100dvh;
+      height: 100dvh;
+      border-radius: 0; border: none;
+      box-shadow: none;
+      min-height: unset;
       display: flex; flex-direction: column;
     }
 
-    .topbar { padding: 10px 16px; }
-    .topbar-title { font-size: 1rem; }
-    .dot { width: 9px; height: 9px; }
+    /* Topbar: compact */
+    .topbar { padding: 8px 14px; flex-shrink: 0; }
+    .topbar-title { font-size: 0.9rem; }
+    .dot { width: 8px; height: 8px; }
+    .progress-dots { gap: 6px; }
 
+    /* Content: fills remaining space, scrollable inside */
     .content {
-      flex: 1; overflow-y: auto;
-      padding: 14px 14px 8px;
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 10px 12px;
       justify-content: flex-start;
-      /* leave room for sticky nav */
-      padding-bottom: 80px;
+      min-height: 0; /* critical for flex scroll */
     }
 
-    /* Intro slide */
-    .char-wrap { width: 120px; height: 130px; }
-    .intro-title { font-size: 1.8rem; }
-    .intro-sub { font-size: 0.95rem; }
-    .badge-row { gap: 8px; margin-top: 16px; }
-    .badge { padding: 8px 12px; font-size: 0.85rem; }
-    .badge-icon { font-size: 1.5rem; }
+    /* Nav bar: fixed height at bottom, never hidden */
+    .nav-bar {
+      flex-shrink: 0;
+      padding: 8px 14px;
+      background: rgba(10,30,70,0.98);
+      border-top: 2px solid rgba(233,69,96,0.5);
+    }
+    .btn { padding: 9px 18px; font-size: 0.85rem; }
+    .slide-counter { font-size: 0.8rem; }
 
-    /* Substance layout: stack vertically on mobile */
+    /* Credit bar: hide on mobile to save space */
+    .hospital-credit { display: none; }
+
+    /* ---- Intro slide ---- */
+    .char-wrap { width: 90px; height: 100px; margin-bottom: 4px; }
+    .intro-title { font-size: 1.55rem; }
+    .intro-sub { font-size: 0.85rem; margin-top: 6px; }
+    .badge-row { gap: 6px; margin-top: 12px; }
+    .badge { padding: 6px 10px; font-size: 0.78rem; }
+    .badge-icon { font-size: 1.3rem; margin-bottom: 2px; }
+    .badge-label { font-size: 0.72rem; }
+
+    /* ---- Substance slides ---- */
     .substance-layout {
       grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    /* Character: small horizontal strip */
+    .char-col {
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
       gap: 10px;
     }
-    .char-col {
-      flex-direction: row; justify-content: center;
-      gap: 14px; align-items: center;
-    }
-    .char-col svg { width: 80px; height: 90px; }
-    .char-col > div { font-size: 0.8rem; padding: 6px 10px; }
+    .char-col svg { width: 64px !important; height: 72px !important; flex-shrink: 0; }
+    .char-col > div:last-child { font-size: 0.72rem; padding: 5px 8px; }
 
-    .substance-title { font-size: 1.3rem; flex-wrap: wrap; }
-    .info-card { padding: 12px 14px; margin-top: 8px; }
-    .info-card p { font-size: 0.88rem; }
-    .danger-box { padding: 10px 12px; margin-top: 8px; }
-    .danger-box p { font-size: 0.85rem; }
-    .test-steps { padding: 10px 12px; margin-top: 8px; }
-    .step-item { font-size: 0.83rem; }
-    .result-row { gap: 8px; margin-top: 8px; }
-    .result-card { padding: 10px; }
-    .result-card .icon { font-size: 1.8rem; }
-    .result-card .label { font-size: 0.82rem; }
-    .result-card .desc { font-size: 0.75rem; }
-    .tab-btn { padding: 5px 12px; font-size: 0.82rem; }
+    .substance-title { font-size: 1.1rem; gap: 6px; }
 
-    /* Summary slide */
-    .summary-title { font-size: 1.5rem; }
-    .tip-list { margin-top: 12px; }
-    .tip-item { padding: 9px 12px; font-size: 0.88rem; margin-bottom: 7px; }
-    .tip-item .tip-icon { font-size: 1.4rem; min-width: 32px; }
+    .tab-row { gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+    .tab-btn { padding: 4px 10px; font-size: 0.76rem; }
 
-    /* Nav bar: sticky to bottom */
-    .nav-bar {
-      position: sticky; bottom: 0; z-index: 50;
-      padding: 10px 16px;
-      background: rgba(15,52,96,0.97);
-      border-top: 2px solid rgba(233,69,96,0.4);
-    }
-    .btn { padding: 10px 20px; font-size: 0.9rem; }
+    .info-card { padding: 8px 10px; margin-top: 6px; }
+    .info-card p { font-size: 0.78rem; line-height: 1.5; margin-bottom: 4px; }
 
-    /* QR button: smaller on mobile */
-    .qr-btn { width: 46px; height: 46px; bottom: 70px; right: 14px; }
+    .danger-box { padding: 8px 10px; margin-top: 6px; }
+    .danger-box h4 { font-size: 0.85rem; }
+    .danger-box p { font-size: 0.76rem; line-height: 1.45; }
 
-    /* modal responsive */
-    .modal-box { padding: 22px 20px; }
-    #qrCanvas { width: 180px !important; height: 180px !important; }
+    .test-steps { padding: 8px 10px; margin-top: 6px; }
+    .test-steps h4 { font-size: 0.85rem; margin-bottom: 5px; }
+    .step-item { font-size: 0.75rem; margin-bottom: 4px; gap: 7px; }
+    .step-num { min-width: 20px; height: 20px; font-size: 0.68rem; }
+
+    .result-row { gap: 6px; margin-top: 6px; }
+    .result-card { padding: 8px 6px; }
+    .result-card .icon { font-size: 1.5rem; }
+    .result-card .label { font-size: 0.75rem; }
+    .result-card .desc { font-size: 0.68rem; }
+
+    /* ---- Summary slide ---- */
+    .summary-title { font-size: 1.3rem; }
+    .tip-list { margin-top: 8px; }
+    .tip-item { padding: 7px 10px; font-size: 0.8rem; margin-bottom: 5px; gap: 10px; }
+    .tip-item .tip-icon { font-size: 1.2rem; min-width: 28px; }
+
+    /* QR button above nav bar */
+    .qr-btn { width: 42px; height: 42px; bottom: 62px; right: 12px; }
+    .qr-btn svg { width: 20px; height: 20px; }
+
+    /* Modal */
+    .modal-box { padding: 20px 16px; }
+    .modal-title { font-size: 1.1rem; }
+    #qrCanvas { width: 160px !important; height: 160px !important; }
+    .share-btn { font-size: 0.82rem; padding: 8px; }
   }
 
   /* ===== QR BUTTON ===== */
