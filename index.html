@@ -4,6 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>สารปนเปื้อนในอาหาร - การ์ตูนอนิเมชั่น</title>
+
+<!-- ===== SEO & Social Meta Tags ===== -->
+<meta name="description" content="เรียนรู้สารปนเปื้อนในอาหาร 5 ชนิด บอแรกซ์ ฟอร์มาลิน สารกันรา สารฟอกขาว น้ำมันทอดซ้ำ พร้อมวิธีทดสอบ โดยกลุ่มงานเภสัชกรรม โรงพยาบาลเขาสมิง">
+<meta name="keywords" content="สารปนเปื้อนในอาหาร,บอแรกซ์,ฟอร์มาลิน,สารกันรา,สารฟอกขาว,น้ำมันทอดซ้ำ,ความปลอดภัยอาหาร,โรงพยาบาลเขาสมิง">
+<meta name="author" content="กลุ่มงานเภสัชกรรมและคุ้มครองผู้บริโภค โรงพยาบาลเขาสมิง">
+
+<!-- Open Graph (Facebook / LINE) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="🔬 สารปนเปื้อนในอาหาร — รู้ทัน ป้องกัน ปลอดภัย!">
+<meta property="og:description" content="การ์ตูนอินเตอร์แอคทีฟสำหรับเด็ก เรียนรู้สารอันตราย 5 ชนิดในอาหาร พร้อมวิธีทดสอบแบบง่ายๆ โดยเภสัชกร รพ.เขาสมิง">
+<meta property="og:image" content="https://via.placeholder.com/1200x630/16213e/f5a623?text=%F0%9F%94%AC+%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B8%9B%E0%B8%99%E0%B9%80%E0%B8%9B%E0%B8%B7%E0%B9%89%E0%B8%AD%E0%B8%99%E0%B9%83%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%AB%E0%B8%B2%E0%B8%A3">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="th_TH">
+<meta property="og:site_name" content="โรงพยาบาลเขาสมิง — กลุ่มงานเภสัชกรรม">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="🔬 สารปนเปื้อนในอาหาร — รู้ทัน ป้องกัน ปลอดภัย!">
+<meta name="twitter:description" content="การ์ตูนอินเตอร์แอคทีฟสำหรับเด็ก เรียนรู้สารอันตราย 5 ชนิดในอาหาร พร้อมวิธีทดสอบ">
+
+<!-- LINE -->
+<meta property="og:rich_attachment" content="true">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800&display=swap');
 
@@ -275,8 +298,81 @@
 
   .hospital-credit {
     font-size: 0.78rem; color: rgba(255,255,255,0.35);
-    text-align: center; padding: 4px 0 0;
+    text-align: center; padding: 4px 0 8px;
   }
+
+  /* ===== QR BUTTON ===== */
+  .qr-btn {
+    position: fixed; bottom: 24px; right: 24px; z-index: 100;
+    background: linear-gradient(135deg,#f5a623,#e94560);
+    border: none; border-radius: 50%; width: 58px; height: 58px;
+    cursor: pointer; box-shadow: 0 4px 20px rgba(233,69,96,0.5);
+    font-size: 1.6rem; display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s; animation: qr-pulse 2.5s ease-in-out infinite;
+    color: white;
+  }
+  .qr-btn:hover { transform: scale(1.12); }
+  @keyframes qr-pulse {
+    0%,100%{ box-shadow: 0 4px 20px rgba(233,69,96,0.5); }
+    50%{ box-shadow: 0 4px 35px rgba(245,166,35,0.8); }
+  }
+
+  /* ===== QR MODAL ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: linear-gradient(160deg,#16213e,#0f3460);
+    border: 2px solid #e94560; border-radius: 24px;
+    padding: 32px 36px; max-width: 380px; width: 90%;
+    box-shadow: 0 0 60px rgba(233,69,96,0.4);
+    text-align: center;
+    animation: modal-in 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes modal-in {
+    from{ opacity:0; transform:scale(0.7); }
+    to  { opacity:1; transform:scale(1); }
+  }
+  .modal-title { font-size: 1.4rem; font-weight: 800; color: #f5a623; margin-bottom: 6px; }
+  .modal-sub   { font-size: 0.9rem; color: #a8d8ea; margin-bottom: 20px; }
+  #qrCanvas {
+    border-radius: 16px; border: 4px solid #fff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    display: block; margin: 0 auto 16px;
+  }
+  .url-box {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px; padding: 10px 14px;
+    color: #dde; font-size: 0.8rem; word-break: break-all;
+    margin-bottom: 18px; text-align: left;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .copy-btn {
+    background: rgba(245,166,35,0.2); border: 1px solid #f5a623;
+    color: #f5a623; border-radius: 8px; padding: 4px 10px;
+    font-family: 'Kanit',sans-serif; font-size: 0.8rem; cursor: pointer;
+    white-space: nowrap; transition: all 0.2s;
+  }
+  .copy-btn:hover { background: #f5a623; color: #000; }
+  .share-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 14px; }
+  .share-btn {
+    flex: 1; padding: 10px; border-radius: 12px; border: none;
+    font-family: 'Kanit',sans-serif; font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .share-line { background: #06c755; color: #fff; }
+  .share-line:hover { background: #05a847; }
+  .share-fb   { background: #1877f2; color: #fff; }
+  .share-fb:hover { background: #0d65d8; }
+  .modal-close {
+    background: none; border: 1px solid rgba(255,255,255,0.2);
+    color: #aaa; border-radius: 10px; padding: 8px 24px;
+    font-family: 'Kanit',sans-serif; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;
+  }
+  .modal-close:hover { border-color: #e94560; color: #e94560; }
 </style>
 </head>
 <body>
@@ -832,15 +928,122 @@
   }
 
   function switchTab(slideNum, tabName){
-    // reset all tab contents in this slide
     const contents = document.querySelectorAll(`#slide-${slideNum} .tab-content`);
     contents.forEach(c=>c.classList.remove('active'));
     const btns = document.querySelectorAll(`#slide-${slideNum} .tab-btn`);
     btns.forEach(b=>b.classList.remove('active'));
-
     document.getElementById(`tab-${slideNum}-${tabName}`).classList.add('active');
     event.target.classList.add('active');
   }
+
+  /* ===== QR CODE ===== */
+  function openQR(){
+    const modal = document.getElementById('qrModal');
+    modal.classList.add('open');
+    const url = window.location.href;
+    document.getElementById('pageUrl').textContent = url;
+    generateQR(url);
+  }
+
+  function closeQR(){
+    document.getElementById('qrModal').classList.remove('open');
+  }
+
+  // Close on overlay click
+  document.addEventListener('click', e => {
+    if(e.target.id === 'qrModal') closeQR();
+  });
+
+  function generateQR(text){
+    const canvas = document.getElementById('qrCanvas');
+    const ctx = canvas.getContext('2d');
+    const size = 220;
+    canvas.width = size; canvas.height = size;
+
+    // Use qrcode.js via CDN
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+    script.onload = () => {
+      const div = document.createElement('div');
+      new QRCode(div, {
+        text: text,
+        width: size, height: size,
+        colorDark: '#0f3460',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+      setTimeout(() => {
+        const img = div.querySelector('img') || div.querySelector('canvas');
+        if(img){
+          ctx.clearRect(0,0,size,size);
+          ctx.drawImage(img, 0, 0, size, size);
+        }
+      }, 200);
+    };
+    // If already loaded
+    if(window.QRCode){
+      script.onload();
+    } else {
+      document.head.appendChild(script);
+    }
+  }
+
+  function copyUrl(){
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(()=>{
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = '✓ คัดลอกแล้ว!';
+      btn.style.background = '#00c896';
+      btn.style.color = '#000';
+      setTimeout(()=>{ btn.textContent='📋 คัดลอก'; btn.style.background=''; btn.style.color='#f5a623'; }, 2000);
+    });
+  }
+
+  function shareLine(){
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent('🔬 สารปนเปื้อนในอาหาร — รู้ทัน ป้องกัน ปลอดภัย!\nการ์ตูนอินเตอร์แอคทีฟสำหรับเด็ก โดยเภสัชกร รพ.เขาสมิง');
+    window.open(`https://social-plugins.line.me/lineit/share?url=${url}&text=${text}`, '_blank');
+  }
+
+  function shareFacebook(){
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
+  }
 </script>
+
+<!-- QR Button (floating) -->
+<button class="qr-btn" onclick="openQR()" title="แชร์ / QR Code">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+    <rect x="3" y="14" width="7" height="7" rx="1"/>
+    <rect x="14" y="14" width="3" height="3" rx="0.5"/>
+    <rect x="18" y="14" width="3" height="3" rx="0.5"/>
+    <rect x="14" y="18" width="3" height="3" rx="0.5"/>
+    <rect x="18" y="18" width="3" height="3" rx="0.5"/>
+  </svg>
+</button>
+
+<!-- QR Modal -->
+<div class="modal-overlay" id="qrModal">
+  <div class="modal-box">
+    <div class="modal-title">📲 แชร์ให้เพื่อน</div>
+    <div class="modal-sub">สแกน QR หรือคัดลอกลิงก์ได้เลย!</div>
+
+    <canvas id="qrCanvas"></canvas>
+
+    <div class="url-box">
+      <span id="pageUrl" style="flex:1;font-size:0.75rem;color:#a8d8ea"></span>
+      <button class="copy-btn" onclick="copyUrl()">📋 คัดลอก</button>
+    </div>
+
+    <div class="share-row">
+      <button class="share-btn share-line" onclick="shareLine()">💬 LINE</button>
+      <button class="share-btn share-fb" onclick="shareFacebook()">📘 Facebook</button>
+    </div>
+
+    <button class="modal-close" onclick="closeQR()">✕ ปิด</button>
+  </div>
+</div>
+
 </body>
 </html>
