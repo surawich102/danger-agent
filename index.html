@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สารปนเปื้อนในอาหาร - การ์ตูนอนิเมชั่น</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Kanit', sans-serif;
+    background: #1a1a2e;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ===== STARS BACKGROUND ===== */
+  .stars {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+  }
+  .star {
+    position: absolute; border-radius: 50%;
+    background: white; opacity: 0;
+    animation: twinkle 3s infinite;
+  }
+  @keyframes twinkle {
+    0%,100%{opacity:0;transform:scale(0.5)}
+    50%{opacity:0.8;transform:scale(1)}
+  }
+
+  /* ===== SCENE WRAPPER ===== */
+  .scene {
+    position: relative; z-index: 1;
+    width: 900px; max-width: 98vw;
+    background: linear-gradient(180deg,#16213e 0%,#0f3460 100%);
+    border-radius: 32px;
+    border: 3px solid #e94560;
+    box-shadow: 0 0 60px rgba(233,69,96,0.3), 0 0 120px rgba(233,69,96,0.1);
+    overflow: hidden;
+    min-height: 580px;
+    display: flex; flex-direction: column;
+  }
+
+  /* ===== TOP BAR ===== */
+  .topbar {
+    background: linear-gradient(90deg,#e94560,#f5a623);
+    padding: 14px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-title {
+    font-size: 1.35rem; font-weight: 800; color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .progress-dots {
+    display: flex; gap: 8px;
+  }
+  .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+    transition: all 0.4s;
+  }
+  .dot.active { background: #fff; transform: scale(1.3); }
+  .dot.done { background: rgba(255,255,255,0.7); }
+
+  /* ===== CONTENT AREA ===== */
+  .content {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px 32px 16px;
+    position: relative;
+  }
+
+  /* ===== SLIDES ===== */
+  .slide { display: none; width: 100%; animation: slideIn 0.5s ease; }
+  .slide.active { display: flex; flex-direction: column; align-items: center; }
+  @keyframes slideIn {
+    from { opacity:0; transform: translateY(20px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* ===== INTRO SLIDE ===== */
+  .intro-title {
+    font-size: 2.8rem; font-weight: 800; color: #fff;
+    text-align: center; line-height: 1.2;
+    text-shadow: 0 4px 20px rgba(233,69,96,0.6);
+    animation: pulse-glow 2s infinite;
+  }
+  .intro-title span { color: #f5a623; }
+  @keyframes pulse-glow {
+    0%,100%{ text-shadow: 0 4px 20px rgba(233,69,96,0.6); }
+    50%{ text-shadow: 0 4px 40px rgba(245,166,35,0.9); }
+  }
+  .intro-sub {
+    font-size: 1.2rem; color: #a8d8ea; margin-top: 12px; text-align: center;
+  }
+  .badge-row {
+    display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap; justify-content: center;
+  }
+  .badge {
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 16px; padding: 12px 20px;
+    text-align: center; font-size: 1rem; color: #fff;
+    transition: all 0.3s;
+    animation: float 3s ease-in-out infinite;
+  }
+  .badge:hover { background: rgba(255,255,255,0.18); transform: scale(1.08); }
+  .badge:nth-child(2){animation-delay:0.3s}
+  .badge:nth-child(3){animation-delay:0.6s}
+  .badge:nth-child(4){animation-delay:0.9s}
+  .badge:nth-child(5){animation-delay:1.2s}
+  @keyframes float {
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-8px); }
+  }
+  .badge-icon { font-size: 2rem; display: block; margin-bottom: 4px; }
+  .badge-label { font-size: 0.85rem; font-weight: 600; }
+
+  /* ===== CHARACTER ===== */
+  .char-wrap {
+    position: relative; width: 180px; height: 200px;
+    animation: bounce-char 2s ease-in-out infinite;
+  }
+  @keyframes bounce-char {
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-12px); }
+  }
+  .character {
+    width: 100%; height: 100%;
+    position: relative;
+  }
+
+  /* ===== SUBSTANCE SLIDES ===== */
+  .substance-layout {
+    display: grid; grid-template-columns: 200px 1fr;
+    gap: 24px; width: 100%; align-items: start;
+  }
+  .char-col { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+  .substance-title {
+    font-size: 2rem; font-weight: 800; color: #fff;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .info-card {
+    background: rgba(255,255,255,0.06);
+    border-radius: 16px; padding: 16px 20px; margin-top: 12px;
+    border-left: 4px solid #f5a623;
+  }
+  .info-card p {
+    color: #dde; font-size: 1rem; line-height: 1.7;
+    display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px;
+  }
+  .info-card p:last-child { margin-bottom: 0; }
+  .danger-box {
+    background: rgba(233,69,96,0.15);
+    border: 2px solid #e94560;
+    border-radius: 12px; padding: 12px 16px; margin-top: 12px;
+  }
+  .danger-box h4 { color: #f5a623; font-size: 1rem; margin-bottom: 6px; }
+  .danger-box p { color: #ffa8b8; font-size: 0.9rem; line-height: 1.6; }
+
+  .test-steps {
+    background: rgba(0,200,150,0.08);
+    border: 2px solid rgba(0,200,150,0.3);
+    border-radius: 12px; padding: 12px 16px; margin-top: 12px;
+  }
+  .test-steps h4 { color: #00c896; font-size: 1rem; margin-bottom: 8px; }
+  .step-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    margin-bottom: 6px; color: #b8ffe6; font-size: 0.88rem;
+  }
+  .step-num {
+    min-width: 24px; height: 24px; border-radius: 50%;
+    background: #00c896; color: #000; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+  }
+
+  .result-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin-top: 12px; width: 100%;
+  }
+  .result-card {
+    border-radius: 14px; padding: 16px;
+    text-align: center;
+  }
+  .result-card.danger { background: rgba(233,69,96,0.15); border: 2px solid #e94560; }
+  .result-card.safe   { background: rgba(0,200,100,0.12); border: 2px solid #00c864; }
+  .result-card .icon { font-size: 2.5rem; }
+  .result-card .label { color: #fff; font-weight: 700; font-size: 0.95rem; margin: 4px 0; }
+  .result-card .desc  { font-size: 0.82rem; color: #ccd; }
+
+  /* ===== SUMMARY ===== */
+  .summary-title { font-size: 2.2rem; font-weight: 800; color: #f5a623; text-align: center; }
+  .tip-list { margin-top: 20px; width: 100%; max-width: 560px; }
+  .tip-item {
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,0.06); border-radius: 14px;
+    padding: 12px 18px; margin-bottom: 10px;
+    animation: slideInLeft 0.5s ease both;
+    font-size: 1rem; color: #dde;
+  }
+  .tip-item .tip-icon { font-size: 1.8rem; min-width: 40px; text-align: center; }
+  @keyframes slideInLeft {
+    from{ opacity:0; transform:translateX(-30px); }
+    to{ opacity:1; transform:translateX(0); }
+  }
+  .tip-item:nth-child(1){animation-delay:0.1s}
+  .tip-item:nth-child(2){animation-delay:0.2s}
+  .tip-item:nth-child(3){animation-delay:0.3s}
+  .tip-item:nth-child(4){animation-delay:0.4s}
+  .tip-item:nth-child(5){animation-delay:0.5s}
+
+  /* ===== BOTTOM NAV ===== */
+  .nav-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 28px;
+    background: rgba(0,0,0,0.25);
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .btn {
+    border: none; border-radius: 50px; padding: 10px 28px;
+    font-family: 'Kanit', sans-serif; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.25s; display: flex; align-items: center; gap: 8px;
+  }
+  .btn-prev {
+    background: rgba(255,255,255,0.1); color: #aaa;
+    border: 2px solid rgba(255,255,255,0.15);
+  }
+  .btn-prev:hover { background: rgba(255,255,255,0.2); color: #fff; }
+  .btn-next {
+    background: linear-gradient(90deg,#e94560,#f5a623);
+    color: #fff; box-shadow: 0 4px 20px rgba(233,69,96,0.4);
+  }
+  .btn-next:hover { transform: scale(1.06); box-shadow: 0 6px 28px rgba(233,69,96,0.6); }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none!important; }
+  .slide-counter { color: rgba(255,255,255,0.4); font-size: 0.9rem; }
+
+  /* ===== SUBSTANCE ICON (mini character) ===== */
+  .subst-char {
+    width: 120px; height: 130px; margin: 0 auto;
+  }
+
+  /* FACE */
+  .face-base {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    border-radius: 50%;
+    animation: face-bounce 2s ease-in-out infinite;
+  }
+  @keyframes face-bounce {
+    0%,100%{transform:translateX(-50%) translateY(0)}
+    50%{transform:translateX(-50%) translateY(-8px)}
+  }
+
+  /* ===== TABS inside substance slide ===== */
+  .tab-row {
+    display: flex; gap: 8px; margin-bottom: 14px;
+  }
+  .tab-btn {
+    padding: 6px 16px; border-radius: 20px; border: none;
+    font-family: 'Kanit', sans-serif; font-size: 0.88rem; font-weight: 600;
+    cursor: pointer; transition: all 0.25s;
+    background: rgba(255,255,255,0.08); color: #aaa;
+  }
+  .tab-btn.active { background: #e94560; color: #fff; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .hospital-credit {
+    font-size: 0.78rem; color: rgba(255,255,255,0.35);
+    text-align: center; padding: 4px 0 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- Main Scene -->
+<div class="scene">
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-title">🔬 สารปนเปื้อนในอาหาร</div>
+    <div class="progress-dots" id="dots"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- SLIDE 0: INTRO -->
+    <div class="slide active" id="slide-0">
+      <div class="char-wrap">
+        <svg viewBox="0 0 180 200" width="180" height="200">
+          <!-- Body -->
+          <ellipse cx="90" cy="140" rx="55" ry="50" fill="#4a90d9"/>
+          <!-- Lab coat -->
+          <ellipse cx="90" cy="148" rx="48" ry="42" fill="#fff"/>
+          <rect x="76" y="110" width="28" height="60" fill="#4a90d9"/>
+          <!-- Pocket -->
+          <rect x="100" y="138" width="20" height="22" rx="4" fill="#e8e8e8" stroke="#ccc" stroke-width="1"/>
+          <text x="108" y="154" text-anchor="middle" font-size="12">🧪</text>
+          <!-- Head -->
+          <ellipse cx="90" cy="78" rx="42" ry="44" fill="#FFD580"/>
+          <!-- Eyes -->
+          <ellipse cx="75" cy="72" rx="7" ry="8" fill="#fff"/>
+          <ellipse cx="105" cy="72" rx="7" ry="8" fill="#fff"/>
+          <circle cx="77" cy="73" r="4" fill="#2c2c4a"/>
+          <circle cx="107" cy="73" r="4" fill="#2c2c4a"/>
+          <circle cx="79" cy="71" r="1.5" fill="#fff"/>
+          <circle cx="109" cy="71" r="1.5" fill="#fff"/>
+          <!-- Smile -->
+          <path d="M 76 90 Q 90 104 104 90" stroke="#e06030" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <!-- Cheeks -->
+          <ellipse cx="68" cy="85" rx="10" ry="6" fill="#ffaaa0" opacity="0.6"/>
+          <ellipse cx="112" cy="85" rx="10" ry="6" fill="#ffaaa0" opacity="0.6"/>
+          <!-- Hair -->
+          <ellipse cx="90" cy="40" rx="42" ry="20" fill="#5c3d1e"/>
+          <ellipse cx="52" cy="60" rx="14" ry="22" fill="#5c3d1e"/>
+          <ellipse cx="128" cy="60" rx="14" ry="22" fill="#5c3d1e"/>
+          <!-- Arms -->
+          <ellipse cx="38" cy="140" rx="13" ry="30" fill="#4a90d9" transform="rotate(-15,38,140)"/>
+          <ellipse cx="142" cy="140" rx="13" ry="30" fill="#4a90d9" transform="rotate(15,142,140)"/>
+          <!-- Hands -->
+          <circle cx="28" cy="163" r="11" fill="#FFD580"/>
+          <circle cx="152" cy="163" r="11" fill="#FFD580"/>
+          <!-- Stethoscope hint -->
+          <path d="M 78 118 Q 90 130 102 118" stroke="#e94560" stroke-width="2.5" fill="none"/>
+        </svg>
+      </div>
+
+      <div class="intro-title">สวัสดีนักสืบ<span>อาหาร</span>! 👋</div>
+      <div class="intro-sub">วันนี้เราจะมาเรียนรู้สารอันตรายที่ซ่อนอยู่ในอาหารด้วยกันนะ</div>
+
+      <div class="badge-row">
+        <div class="badge">
+          <span class="badge-icon">🟠</span>
+          <span class="badge-label">บอแรกซ์</span>
+        </div>
+        <div class="badge">
+          <span class="badge-icon">🔵</span>
+          <span class="badge-label">ฟอร์มาลิน</span>
+        </div>
+        <div class="badge">
+          <span class="badge-icon">🟢</span>
+          <span class="badge-label">สารกันรา</span>
+        </div>
+        <div class="badge">
+          <span class="badge-icon">🟣</span>
+          <span class="badge-label">สารฟอกขาว</span>
+        </div>
+        <div class="badge">
+          <span class="badge-icon">🟡</span>
+          <span class="badge-label">น้ำมันทอดซ้ำ</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 1: บอแรกซ์ -->
+    <div class="slide" id="slide-1">
+      <div class="substance-layout">
+        <div class="char-col">
+          <svg viewBox="0 0 140 160" width="140" height="160">
+            <!-- Ghost villain character - orange -->
+            <ellipse cx="70" cy="90" rx="50" ry="55" fill="#ff8c00"/>
+            <ellipse cx="70" cy="50" rx="38" ry="38" fill="#ffb347"/>
+            <!-- angry eyes -->
+            <ellipse cx="56" cy="44" rx="8" ry="9" fill="#fff"/>
+            <ellipse cx="84" cy="44" rx="8" ry="9" fill="#fff"/>
+            <circle cx="58" cy="45" r="5" fill="#1a1a1a"/>
+            <circle cx="86" cy="45" r="5" fill="#1a1a1a"/>
+            <!-- angry brow -->
+            <line x1="48" y1="34" x2="64" y2="40" stroke="#a05000" stroke-width="3" stroke-linecap="round"/>
+            <line x1="76" y1="40" x2="92" y2="34" stroke="#a05000" stroke-width="3" stroke-linecap="round"/>
+            <!-- fangs mouth -->
+            <path d="M 56 62 Q 70 74 84 62" stroke="#7a2000" stroke-width="2.5" fill="#ff4444"/>
+            <polygon points="62,64 66,74 70,64" fill="#fff"/>
+            <polygon points="74,64 78,74 82,64" fill="#fff"/>
+            <!-- Label -->
+            <rect x="10" y="108" width="120" height="30" rx="8" fill="#ff4400" opacity="0.85"/>
+            <text x="70" y="128" text-anchor="middle" fill="#fff" font-family="Kanit,sans-serif" font-weight="700" font-size="13">ผงกรอบ ❌</text>
+          </svg>
+          <div style="background:rgba(255,140,0,0.15);border:2px solid #ff8c00;border-radius:12px;padding:10px 14px;text-align:center;color:#ffb347;font-weight:700;font-size:0.9rem;">
+            🚫 ห้ามใส่ในอาหาร!
+          </div>
+        </div>
+        <div>
+          <div class="substance-title">🟠 บอแรกซ์ <span style="font-size:1rem;color:#ffb347">(ผงกรอบ)</span></div>
+          <div class="tab-row">
+            <button class="tab-btn active" onclick="switchTab(1,'info')">📖 รู้จัก</button>
+            <button class="tab-btn" onclick="switchTab(1,'danger')">⚠️ โทษ</button>
+            <button class="tab-btn" onclick="switchTab(1,'test')">🧪 ทดสอบ</button>
+          </div>
+
+          <div class="tab-content active" id="tab-1-info">
+            <div class="info-card">
+              <p>🏷️ <strong>ชื่ออื่น:</strong> ผงกรอบ / เพ่งแซ / น้ำประสานทอง</p>
+              <p>🎯 <strong>ใส่ทำไม?</strong> ทำให้อาหารกรอบ ป้องกันเน่าเสีย</p>
+              <p>🛒 <strong>พบใน:</strong> ลูกชิ้น หมูบด ปลาบด ทอดมัน ทับทิมกรอบ ลอดช่อง</p>
+            </div>
+          </div>
+
+          <div class="tab-content" id="tab-1-danger">
+            <div class="danger-box">
+              <h4>⚠️ อันตรายต่อร่างกาย</h4>
+              <p>☠️ เป็นพิษต่อ<strong>ไตและสมอง</strong>โดยตรง<br>
+              🤢 ระคายเคืองระบบทางเดินอาหาร<br>
+              😱 ผู้ใหญ่รับ 15 กรัม → อาเจียนเป็นเลือด อาจเสียชีวิต<br>
+              👶 เด็กรับเพียง 5 กรัม → อาจถึงแก่ชีวิตได้!</p>
+            </div>
+          </div>
+
+          <div class="tab-content" id="tab-1-test">
+            <div class="test-steps">
+              <h4>🧪 วิธีทดสอบด้วยกระดาษขมิ้น</h4>
+              <div class="step-item"><div class="step-num">1</div><div>สับตัวอย่างให้ชิ้นเล็ก ใส่ถ้วยยา</div></div>
+              <div class="step-item"><div class="step-num">2</div><div>เติมน้ำยาทดสอบบอแรกซ์จนแฉะ</div></div>
+              <div class="step-item"><div class="step-num">3</div><div>จุ่มกระดาษขมิ้น ตากแดด 10 นาที</div></div>
+              <div class="step-item"><div class="step-num">4</div><div>สังเกตสีกระดาษ</div></div>
+            </div>
+            <div class="result-row">
+              <div class="result-card danger">
+                <div class="icon">🟠→🔴</div>
+                <div class="label">❌ มีสารปนเปื้อน</div>
+                <div class="desc">กระดาษเปลี่ยนเป็น สีส้ม-แดง</div>
+              </div>
+              <div class="result-card safe">
+                <div class="icon">🟡</div>
+                <div class="label">✅ ปลอดภัย</div>
+                <div class="desc">กระดาษยังคง สีเหลืองเดิม</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: ฟอร์มาลิน -->
+    <div class="slide" id="slide-2">
+      <div class="substance-layout">
+        <div class="char-col">
+          <svg viewBox="0 0 140 160" width="140" height="160">
+            <ellipse cx="70" cy="90" rx="50" ry="55" fill="#1565c0"/>
+            <ellipse cx="70" cy="50" rx="38" ry="38" fill="#4fc3f7"/>
+            <ellipse cx="56" cy="44" rx="8" ry="9" fill="#fff"/>
+            <ellipse cx="84" cy="44" rx="8" ry="9" fill="#fff"/>
+            <circle cx="58" cy="45" r="5" fill="#1a1a1a"/>
+            <circle cx="86" cy="45" r="5" fill="#1a1a1a"/>
+            <line x1="48" y1="34" x2="64" y2="40" stroke="#0d2f6e" stroke-width="3" stroke-linecap="round"/>
+            <line x1="76" y1="40" x2="92" y2="34" stroke="#0d2f6e" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 56 62 Q 70 74 84 62" stroke="#0d2f6e" stroke-width="2.5" fill="#2196f3"/>
+            <polygon points="62,64 66,74 70,64" fill="#fff"/>
+            <polygon points="74,64 78,74 82,64" fill="#fff"/>
+            <!-- skull -->
+            <text x="70" y="98" text-anchor="middle" font-size="22">💀</text>
+            <rect x="10" y="118" width="120" height="28" rx="8" fill="#0d47a1" opacity="0.9"/>
+            <text x="70" y="136" text-anchor="middle" fill="#fff" font-family="Kanit,sans-serif" font-weight="700" font-size="12">น้ำยาดองศพ ❌</text>
+          </svg>
+          <div style="background:rgba(21,101,192,0.2);border:2px solid #4fc3f7;border-radius:12px;padding:10px 14px;text-align:center;color:#81d4fa;font-weight:700;font-size:0.9rem;">
+            🚫 อันตรายมาก!
+          </div>
+        </div>
+        <div>
+          <div class="substance-title">🔵 ฟอร์มาลิน</div>
+          <div class="tab-row">
+            <button class="tab-btn active" onclick="switchTab(2,'info')">📖 รู้จัก</button>
+            <button class="tab-btn" onclick="switchTab(2,'danger')">⚠️ โทษ</button>
+            <button class="tab-btn" onclick="switchTab(2,'test')">🧪 ทดสอบ</button>
+          </div>
+          <div class="tab-content active" id="tab-2-info">
+            <div class="info-card">
+              <p>🏷️ <strong>ชื่ออื่น:</strong> ฟอร์มาลดีไฮด์ / น้ำยาดองศพ</p>
+              <p>🎯 <strong>ใส่ทำไม?</strong> ทำให้อาหารทะเล เนื้อสัตว์ ผักสด ดูสดนานขึ้น</p>
+              <p>🛒 <strong>พบใน:</strong> อาหารทะเลสด เนื้อสัตว์ เล็บมือนาง ผักสดต่างๆ</p>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-2-danger">
+            <div class="danger-box">
+              <h4>⚠️ อันตรายต่อร่างกาย</h4>
+              <p>🤢 รับเกิน 30-60 มล. → ปวดท้องรุนแรง อาเจียน ท้องเดิน<br>
+              😵 หมดสติ อาจเสียชีวิตได้!<br>
+              🦠 สะสมระยะยาว → เสี่ยง<strong>มะเร็ง</strong></p>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-2-test">
+            <div class="test-steps">
+              <h4>🧪 วิธีทดสอบ (ระบบ 3 ขวด)</h4>
+              <div class="step-item"><div class="step-num">1</div><div>ของเหลว: เทน้ำแช่อาหารลงขวด 1 ครึ่งขวด</div></div>
+              <div class="step-item"><div class="step-num">2</div><div>ของแข็ง: ล้างด้วยน้ำสะอาด เทน้ำล้างลงขวด 1</div></div>
+              <div class="step-item"><div class="step-num">3</div><div>เทจากขวด 1→2→3 เขย่าแต่ละครั้ง</div></div>
+              <div class="step-item"><div class="step-num">4</div><div>สังเกตสีในขวด 3</div></div>
+            </div>
+            <div class="result-row">
+              <div class="result-card danger">
+                <div class="icon">🩷→🔴</div>
+                <div class="label">❌ มีสารปนเปื้อน</div>
+                <div class="desc">สีชมพู → สีแดง</div>
+              </div>
+              <div class="result-card safe">
+                <div class="icon">🫧</div>
+                <div class="label">✅ ปลอดภัย</div>
+                <div class="desc">ไม่เปลี่ยนสี</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: สารกันรา -->
+    <div class="slide" id="slide-3">
+      <div class="substance-layout">
+        <div class="char-col">
+          <svg viewBox="0 0 140 160" width="140" height="160">
+            <ellipse cx="70" cy="90" rx="50" ry="55" fill="#2e7d32"/>
+            <ellipse cx="70" cy="50" rx="38" ry="38" fill="#81c784"/>
+            <ellipse cx="56" cy="44" rx="8" ry="9" fill="#fff"/>
+            <ellipse cx="84" cy="44" rx="8" ry="9" fill="#fff"/>
+            <circle cx="58" cy="45" r="5" fill="#1a1a1a"/>
+            <circle cx="86" cy="45" r="5" fill="#1a1a1a"/>
+            <line x1="48" y1="34" x2="64" y2="40" stroke="#1b5e20" stroke-width="3" stroke-linecap="round"/>
+            <line x1="76" y1="40" x2="92" y2="34" stroke="#1b5e20" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 56 62 Q 70 74 84 62" stroke="#1b5e20" stroke-width="2.5" fill="#4caf50"/>
+            <polygon points="62,64 66,74 70,64" fill="#fff"/>
+            <polygon points="74,64 78,74 82,64" fill="#fff"/>
+            <text x="70" y="98" text-anchor="middle" font-size="20">🥒</text>
+            <rect x="10" y="118" width="120" height="28" rx="8" fill="#1b5e20" opacity="0.9"/>
+            <text x="70" y="136" text-anchor="middle" fill="#fff" font-family="Kanit,sans-serif" font-weight="700" font-size="11">กรดซาลิซิลิค ❌</text>
+          </svg>
+          <div style="background:rgba(46,125,50,0.2);border:2px solid #81c784;border-radius:12px;padding:10px 14px;text-align:center;color:#a5d6a7;font-weight:700;font-size:0.9rem;">
+            🚫 อยู่ในผักดอง!
+          </div>
+        </div>
+        <div>
+          <div class="substance-title">🟢 สารกันรา</div>
+          <div class="tab-row">
+            <button class="tab-btn active" onclick="switchTab(3,'info')">📖 รู้จัก</button>
+            <button class="tab-btn" onclick="switchTab(3,'danger')">⚠️ โทษ</button>
+            <button class="tab-btn" onclick="switchTab(3,'test')">🧪 ทดสอบ</button>
+          </div>
+          <div class="tab-content active" id="tab-3-info">
+            <div class="info-card">
+              <p>🏷️ <strong>ชื่ออื่น:</strong> กรดซาลิซิลิค</p>
+              <p>🎯 <strong>ใส่ทำไม?</strong> ดองผัก ผลไม้ ให้ดูสดใหม่</p>
+              <p>🛒 <strong>พบใน:</strong> อาหารหมักดอง ผักดอง ผลไม้ดอง แตงกวาดอง กระเทียมดอง</p>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-3-danger">
+            <div class="danger-box">
+              <h4>⚠️ อันตรายต่อร่างกาย</h4>
+              <p>🩸 สะสมในเลือดเกิน 25-35 มก. → อันตราย<br>
+              🤢 อาเจียน หูอื้อ มีไข้<br>
+              💀 ระดับสูง → อาจถึงเสียชีวิต<br>
+              🫁 สะสมระยะยาว → ทำลาย<strong>ไตและตับ</strong></p>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-3-test">
+            <div class="test-steps">
+              <h4>🧪 วิธีทดสอบ (2 ถ้วย)</h4>
+              <div class="step-item"><div class="step-num">1</div><div>ตักน้ำยาดอง ใส่ถ้วยที่ 1 และ 2</div></div>
+              <div class="step-item"><div class="step-num">2</div><div>หยดน้ำยาซาลิซิลิค 1 ลงถ้วยที่ 2 (10 หยด)</div></div>
+              <div class="step-item"><div class="step-num">3</div><div>หยดน้ำยาทดสอบ 2 ลงถ้วยที่ 2 (2-3 หยด)</div></div>
+              <div class="step-item"><div class="step-num">4</div><div>หยดน้ำยาทดสอบ 2 ลงถ้วยที่ 1 สังเกตสี</div></div>
+            </div>
+            <div class="result-row">
+              <div class="result-card danger">
+                <div class="icon">🟣⚫</div>
+                <div class="label">❌ มีสารปนเปื้อน</div>
+                <div class="desc">ถ้วย 1 สีม่วงดำ เหมือนถ้วย 2</div>
+              </div>
+              <div class="result-card safe">
+                <div class="icon">🌈</div>
+                <div class="label">✅ ปลอดภัย</div>
+                <div class="desc">ถ้วย 1 สีอื่น (ไม่ใช่ม่วงดำ)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: สารฟอกขาว -->
+    <div class="slide" id="slide-4">
+      <div class="substance-layout">
+        <div class="char-col">
+          <svg viewBox="0 0 140 160" width="140" height="160">
+            <ellipse cx="70" cy="90" rx="50" ry="55" fill="#6a1b9a"/>
+            <ellipse cx="70" cy="50" rx="38" ry="38" fill="#ce93d8"/>
+            <ellipse cx="56" cy="44" rx="8" ry="9" fill="#fff"/>
+            <ellipse cx="84" cy="44" rx="8" ry="9" fill="#fff"/>
+            <circle cx="58" cy="45" r="5" fill="#1a1a1a"/>
+            <circle cx="86" cy="45" r="5" fill="#1a1a1a"/>
+            <line x1="48" y1="34" x2="64" y2="40" stroke="#4a0072" stroke-width="3" stroke-linecap="round"/>
+            <line x1="76" y1="40" x2="92" y2="34" stroke="#4a0072" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 56 62 Q 70 74 84 62" stroke="#4a0072" stroke-width="2.5" fill="#9c27b0"/>
+            <polygon points="62,64 66,74 70,64" fill="#fff"/>
+            <polygon points="74,64 78,74 82,64" fill="#fff"/>
+            <text x="70" y="98" text-anchor="middle" font-size="20">🌱</text>
+            <rect x="10" y="118" width="120" height="28" rx="8" fill="#4a0072" opacity="0.9"/>
+            <text x="70" y="134" text-anchor="middle" fill="#fff" font-family="Kanit,sans-serif" font-weight="700" font-size="10">โซเดียมไฮโดรซัลไฟต์ ❌</text>
+          </svg>
+          <div style="background:rgba(106,27,154,0.2);border:2px solid #ce93d8;border-radius:12px;padding:10px 14px;text-align:center;color:#e1bee7;font-weight:700;font-size:0.9rem;">
+            🚫 ระวังถั่วงอก!
+          </div>
+        </div>
+        <div>
+          <div class="substance-title">🟣 สารฟอกขาว</div>
+          <div class="tab-row">
+            <button class="tab-btn active" onclick="switchTab(4,'info')">📖 รู้จัก</button>
+            <button class="tab-btn" onclick="switchTab(4,'danger')">⚠️ โทษ</button>
+            <button class="tab-btn" onclick="switchTab(4,'test')">🧪 ทดสอบ</button>
+          </div>
+          <div class="tab-content active" id="tab-4-info">
+            <div class="info-card">
+              <p>🏷️ <strong>ชื่ออื่น:</strong> โซเดียมไฮโดรซัลไฟต์</p>
+              <p>🎯 <strong>ใส่ทำไม?</strong> ทำให้อาหารมีสีขาวสวย ดูน่ากิน</p>
+              <p>🛒 <strong>พบใน:</strong> น้ำตาลทรายแดง หน่อไม้ดอง ถั่วงอก ขิงซอย กระท้อน</p>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-4-danger">
+            <div class="danger-box">
+              <h4>⚠️ อันตรายต่อร่างกาย</h4>
+              <p>😮‍💨 หายใจขัด เวียนศีรษะ ความดันโลหิตต่ำ<br>
+              🤢 ปวดท้อง อาเจียน อุจจาระร่วง<br>
+              😱 แพ้รุนแรง → ช็อค หมดสติ<br>
+              🫁 ผู้ป่วยหืดหอบ → เสี่ยงเสียชีวิต!</p>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-4-test">
+            <div class="test-steps">
+              <h4>🧪 วิธีทดสอบ</h4>
+              <div class="step-item"><div class="step-num">1</div><div>ผักสด: แช่น้ำ 1-2 นาที เอาน้ำแช่ 5 มล.</div></div>
+              <div class="step-item"><div class="step-num">2</div><div>ของเหลว: ตักตัวอย่าง 5 มล. ใส่ถ้วยยา</div></div>
+              <div class="step-item"><div class="step-num">3</div><div>หยดน้ำยา 1-3 หยด เขย่าให้เข้ากัน</div></div>
+              <div class="step-item"><div class="step-num">4</div><div>สังเกตสีทันที!</div></div>
+            </div>
+            <div class="result-row">
+              <div class="result-card danger">
+                <div class="icon">⚫🩶</div>
+                <div class="label">❌ มีสารปนเปื้อน</div>
+                <div class="desc">สีเทา หรือ สีดำ</div>
+              </div>
+              <div class="result-card safe">
+                <div class="icon">💙🩵</div>
+                <div class="label">✅ ปลอดภัย</div>
+                <div class="desc">สีฟ้าอ่อน หรือ สีเขียว</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: น้ำมันทอดซ้ำ -->
+    <div class="slide" id="slide-5">
+      <div class="substance-layout">
+        <div class="char-col">
+          <svg viewBox="0 0 140 160" width="140" height="160">
+            <ellipse cx="70" cy="90" rx="50" ry="55" fill="#f57f17"/>
+            <ellipse cx="70" cy="50" rx="38" ry="38" fill="#fff176"/>
+            <ellipse cx="56" cy="44" rx="8" ry="9" fill="#fff"/>
+            <ellipse cx="84" cy="44" rx="8" ry="9" fill="#fff"/>
+            <circle cx="58" cy="45" r="5" fill="#1a1a1a"/>
+            <circle cx="86" cy="45" r="5" fill="#1a1a1a"/>
+            <line x1="48" y1="34" x2="64" y2="40" stroke="#e65100" stroke-width="3" stroke-linecap="round"/>
+            <line x1="76" y1="40" x2="92" y2="34" stroke="#e65100" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 56 62 Q 70 74 84 62" stroke="#e65100" stroke-width="2.5" fill="#ff9800"/>
+            <polygon points="62,64 66,74 70,64" fill="#fff"/>
+            <polygon points="74,64 78,74 82,64" fill="#fff"/>
+            <text x="70" y="98" text-anchor="middle" font-size="20">🍟</text>
+            <rect x="10" y="118" width="120" height="28" rx="8" fill="#e65100" opacity="0.9"/>
+            <text x="70" y="136" text-anchor="middle" fill="#fff" font-family="Kanit,sans-serif" font-weight="700" font-size="12">โพลาร์คอมพาวด์ ❌</text>
+          </svg>
+          <div style="background:rgba(245,127,23,0.2);border:2px solid #fff176;border-radius:12px;padding:10px 14px;text-align:center;color:#fff9c4;font-weight:700;font-size:0.9rem;">
+            🚫 ระวังของทอด!
+          </div>
+        </div>
+        <div>
+          <div class="substance-title">🟡 น้ำมันทอดซ้ำ</div>
+          <div class="tab-row">
+            <button class="tab-btn active" onclick="switchTab(5,'info')">📖 รู้จัก</button>
+            <button class="tab-btn" onclick="switchTab(5,'danger')">⚠️ โทษ</button>
+            <button class="tab-btn" onclick="switchTab(5,'test')">🧪 ทดสอบ</button>
+          </div>
+          <div class="tab-content active" id="tab-5-info">
+            <div class="info-card">
+              <p>🏷️ <strong>สารที่เกิด:</strong> โพลาร์คอมพาวด์ (Polar Compounds)</p>
+              <p>⚠️ <strong>เกิดเมื่อ:</strong> ทอดน้ำมันซ้ำหลายครั้งที่อุณหภูมิสูง</p>
+              <p>🛒 <strong>พบใน:</strong> ของทอดริมทาง ไก่ทอด มันทอด ปาท่องโก๋</p>
+              <p>⚖️ <strong>กฎหมาย:</strong> น้ำมันต้องมีสารโพลาร์ไม่เกิน 25%</p>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-5-danger">
+            <div class="danger-box">
+              <h4>⚠️ อันตรายต่อร่างกาย</h4>
+              <p>❤️ เพิ่มความเสี่ยง<strong>ความดันโลหิตสูง</strong><br>
+              🫀 เสี่ยงโรคหัวใจและหลอดเลือด<br>
+              🫁 ไอระเหย → เสี่ยง<strong>มะเร็งปอด</strong>ในผู้ประกอบอาหาร<br>
+              ☢️ สะสมในร่างกายระยะยาว → อันตราย!</p>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-5-test">
+            <div class="test-steps">
+              <h4>🧪 วิธีทดสอบ (ชุดทดสอบโพลาร์)</h4>
+              <div class="step-item"><div class="step-num">1</div><div>ผสมน้ำมันตัวอย่างให้เป็นเนื้อเดียวกัน</div></div>
+              <div class="step-item"><div class="step-num">2</div><div>ดูดน้ำมัน 1 ซีซี ลงขวดวิเคราะห์</div></div>
+              <div class="step-item"><div class="step-num">3</div><div>เติมสารโพลาร์ 1 (4 ซีซี) เขย่า 30 วินาที</div></div>
+              <div class="step-item"><div class="step-num">4</div><div>เติมสารโพลาร์ 3 (0.2 ซีซี) เขย่า สังเกตสี</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;">
+              <div class="result-card safe" style="padding:10px;">
+                <div class="icon">🩷</div>
+                <div class="label" style="font-size:0.8rem;">✅ ปลอดภัย</div>
+                <div class="desc">สีชมพูเข้ม &lt;20%</div>
+              </div>
+              <div style="background:rgba(255,193,7,0.15);border:2px solid #ffc107;border-radius:14px;padding:10px;text-align:center;">
+                <div class="icon">🌸</div>
+                <div class="label" style="font-size:0.8rem;color:#fff;">⚠️ ระวัง</div>
+                <div class="desc">สีชมพูจาง 20-25%</div>
+              </div>
+              <div class="result-card danger" style="padding:10px;">
+                <div class="icon">🫙</div>
+                <div class="label" style="font-size:0.8rem;">❌ อันตราย</div>
+                <div class="desc">ไม่มีสีชมพู &gt;25%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: SUMMARY -->
+    <div class="slide" id="slide-6">
+      <div class="summary-title">🌟 นักสืบอาหารตัวน้อย</div>
+      <div style="color:#a8d8ea;text-align:center;margin:6px 0 16px;font-size:1rem;">จำไว้ รู้ทัน ป้องกัน ปลอดภัยเสมอ!</div>
+      <div class="tip-list">
+        <div class="tip-item">
+          <span class="tip-icon">🔍</span>
+          <span>สังเกต<strong>สี กลิ่น รูปร่าง</strong> อาหารที่ผิดปกติ</span>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">🛒</span>
+          <span>เลือกซื้ออาหารจาก<strong>แหล่งที่น่าเชื่อถือ</strong> มีฉลาก</span>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">🧼</span>
+          <span><strong>ล้างผักผลไม้</strong>ให้สะอาดก่อนรับประทาน</span>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">🌡️</span>
+          <span>หลีกเลี่ยง<strong>อาหารทอดที่ใช้น้ำมันซ้ำ</strong>หลายครั้ง</span>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">🧪</span>
+          <span>ใช้<strong>ชุดทดสอบ</strong>เมื่อสงสัย และแจ้งผู้ใหญ่ทันที!</span>
+        </div>
+      </div>
+      <div style="margin-top:20px;text-align:center;">
+        <div style="font-size:3.5rem;animation:bounce-star 1s ease-in-out infinite">🎉</div>
+        <div style="color:#f5a623;font-weight:800;font-size:1.2rem;margin-top:8px">เก่งมากเลย! เรียนจบแล้ว!</div>
+      </div>
+      @keyframes bounce-star {
+        0%,100%{transform:scale(1)} 50%{transform:scale(1.2)}
+      }
+    </div>
+
+  </div><!-- end content -->
+
+  <!-- Bottom Nav -->
+  <div class="nav-bar">
+    <button class="btn btn-prev" id="prevBtn" onclick="changeSlide(-1)" disabled>← ก่อนหน้า</button>
+    <span class="slide-counter" id="counter">1 / 7</span>
+    <button class="btn btn-next" id="nextBtn" onclick="changeSlide(1)">ถัดไป →</button>
+  </div>
+
+  <div class="hospital-credit">กลุ่มงานเภสัชกรรมและคุ้มครองผู้บริโภค โรงพยาบาลเขาสมิง จังหวัดตราด</div>
+
+</div><!-- end scene -->
+
+<style>
+  @keyframes bounce-star {
+    0%,100%{transform:scale(1)} 50%{transform:scale(1.2) rotate(10deg)}
+  }
+</style>
+
+<script>
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for(let i=0;i<80;i++){
+    const s = document.createElement('div');
+    s.className='star';
+    const size = Math.random()*3+1;
+    s.style.cssText=`width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s`;
+    starsEl.appendChild(s);
+  }
+
+  // Slides
+  const totalSlides = 7;
+  let current = 0;
+
+  // Build dots
+  const dotsEl = document.getElementById('dots');
+  for(let i=0;i<totalSlides;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i===0?' active':'');
+    dotsEl.appendChild(d);
+  }
+
+  function updateDots(){
+    document.querySelectorAll('.dot').forEach((d,i)=>{
+      d.className='dot'+(i===current?' active':i<current?' done':'');
+    });
+  }
+
+  function changeSlide(dir){
+    const slides=document.querySelectorAll('.slide');
+    slides[current].classList.remove('active');
+    current=Math.max(0,Math.min(totalSlides-1,current+dir));
+    slides[current].classList.add('active');
+    document.getElementById('prevBtn').disabled=current===0;
+    document.getElementById('nextBtn').disabled=current===totalSlides-1;
+    document.getElementById('nextBtn').textContent=current===totalSlides-1?'🎉 จบแล้ว!':'ถัดไป →';
+    document.getElementById('counter').textContent=`${current+1} / ${totalSlides}`;
+    updateDots();
+  }
+
+  function switchTab(slideNum, tabName){
+    // reset all tab contents in this slide
+    const contents = document.querySelectorAll(`#slide-${slideNum} .tab-content`);
+    contents.forEach(c=>c.classList.remove('active'));
+    const btns = document.querySelectorAll(`#slide-${slideNum} .tab-btn`);
+    btns.forEach(b=>b.classList.remove('active'));
+
+    document.getElementById(`tab-${slideNum}-${tabName}`).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+</body>
+</html>
